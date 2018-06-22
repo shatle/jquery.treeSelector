@@ -17,7 +17,7 @@
       checkWithParent: false,
       // title with 'title1 - title 2' if true
       titleWithParent: false,
-      // when item click, dont only view leaf title if true
+      // when item click, only view leaf title if true
       notViewClickParentTitle: false
     }, params)
 

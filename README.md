@@ -44,5 +44,20 @@ var rootNode = [{
 
 $('div.treeSelector').treeSelector(rootNode, [11, 12], function(e, values) {
   console.info('onChange', e, values);
-})
+}, {})
+```
+
+three options: 
+
+```
+ // options
+var options = $.extend({
+  // children checked/unchecked if true
+  checkWithParent: false,
+  // title with 'title1 - title 2' if true
+  titleWithParent: false,
+  // when item click, only view leaf title if true
+  notViewClickParentTitle: false
+}, params)
+
 ```
