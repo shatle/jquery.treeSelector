@@ -1,5 +1,5 @@
 (function($) {
-  jQuery.fn.treeSelector = function(tree, defaultValues, onChange) {
+  jQuery.fn.treeSelector = function(tree, defaultValues, onChange, params) {
     // autoclose
     if (!window.treeSelector_autoclose_FN) {
       $(window).on('click', function(e) {
@@ -11,6 +11,16 @@
       })
     }
 
+    // options
+    var options = $.extend({
+      checkWithParent: false
+    }, params)
+
+    /**
+     * iterate to gen node
+     * @param {*} node 
+     * @param {*} level 
+     */
     var buildTree = function(node, level) {
       var hasChildren = node.children && node.children.length > 0
 
@@ -49,6 +59,11 @@
       return li
     }
 
+    /**
+     * view values(titles)
+     * @param {*} $selector 
+     * @param {*} values 
+     */
     var appendSelectedItems = function($selector, values) {
       console.info('appendSelectedItems', Array.isArray(values), typeof(values));
       if ($selector && values && Array.isArray(values)) {
@@ -79,6 +94,10 @@
       }
     }
 
+    /**
+     * get current values
+     * @param {*} $selector 
+     */
     var getCheckedInputValues = function($selector) {
       return $selector.find('input[type=checkbox]:checked')
       .map(function(_index, elem){ return $(elem).attr('data-value') })
@@ -87,6 +106,15 @@
 
     var bindEvents = function($selector) {
       $selector.on('change', 'input[type=checkbox]', function(e) {
+        if (options.checkWithParent) {
+          var childrenBox = $(e.target)
+            .parent('.treeSelector-li-title-box')
+            .next('ul')
+          if (childrenBox && childrenBox.length > 0) {
+            childrenBox.find('input[type=checkbox]').prop('checked', e.target.checked)
+          }
+        }
+
         var values = getCheckedInputValues($selector)
         appendSelectedItems($selector, values)
         onChange && onChange(e, values)

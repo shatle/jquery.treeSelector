@@ -25,7 +25,7 @@
       width: 100%;
     }
   </style>
-  
+
   <div class="container">
       <div class="treeSelector"></div>
   </div>
@@ -74,7 +74,7 @@
 
       $('div.treeSelector').treeSelector(rootNode, [11, 12], function(e, values) {
         console.info('onChange', e, values);
-      })
+      }, {checkWithParent: true})
     })
   </script>
 </body>
