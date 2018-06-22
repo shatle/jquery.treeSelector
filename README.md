@@ -2,6 +2,8 @@
 
 #### Example
 
+[https://shatle.github.io/jquery.treeSelector/](https://shatle.github.io/jquery.treeSelector/)
+
 ```
 var rootNode = [{
   "id": "1",
@@ -42,9 +44,13 @@ var rootNode = [{
   ]
 }]
 
-$('div.treeSelector').treeSelector(rootNode, [11, 12], function(e, values) {
+$('div.treeSelector').treeSelector(rootNode, [11, 12], function (e, values) {
   console.info('onChange', e, values);
-}, {})
+}, { 
+  checkWithParent: true, 
+  titleWithParent: true,
+  notViewClickParentTitle: true
+})
 ```
 
 three options: 
