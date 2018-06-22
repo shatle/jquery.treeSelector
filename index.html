@@ -1,25 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0="
+    crossorigin="anonymous">
   <link rel="stylesheet" href="./jquery.treeSelector.css">
 
-  <script
-  src="https://code.jquery.com/jquery-1.12.4.min.js"
-  integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
-  crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
+    crossorigin="anonymous"></script>
   <script src="./jquery.treeSelector.js"></script>
 </head>
+
 <body>
   <style>
-    html, body {
+    html,
+    body {
       padding: 0;
       margin: 0;
     }
+
     .container {
       height: 100vh;
       width: 100%;
@@ -27,12 +30,12 @@
   </style>
 
   <div class="container">
-      <div class="treeSelector"></div>
+    <div class="treeSelector"></div>
   </div>
-  
+
 
   <script> 
-    jQuery(document).ready(function($) {
+    jQuery(document).ready(function ($) {
       var rootNode = [{
         "id": "1",
         "title": "Node 0",
@@ -72,10 +75,15 @@
         ]
       }]
 
-      $('div.treeSelector').treeSelector(rootNode, [11, 12], function(e, values) {
+      $('div.treeSelector').treeSelector(rootNode, [11, 12], function (e, values) {
         console.info('onChange', e, values);
-      }, {checkWithParent: true})
+      }, { 
+        checkWithParent: true, 
+        titleWithParent: true,
+        notViewClickParentTitle: true
+      })
     })
   </script>
 </body>
+
 </html>
