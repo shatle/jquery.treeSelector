@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="./jquery.treeSelector.css">
+
+  <script
+  src="https://code.jquery.com/jquery-1.12.4.min.js"
+  integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
+  crossorigin="anonymous"></script>
+  <script src="./jquery.treeSelector.js"></script>
+</head>
+<body>
+  <style>
+    html, body {
+      padding: 0;
+      margin: 0;
+    }
+    .container {
+      height: 100vh;
+      width: 100%;
+    }
+  </style>
+  
+  <div class="container">
+      <div class="treeSelector"></div>
+  </div>
+  
+
+  <script> 
+    jQuery(document).ready(function($) {
+      var rootNode = [{
+        "id": "1",
+        "title": "Node 0",
+        value: 1,
+        "children": [
+          {
+            "id": "11",
+            "title": "Node 11",
+            value: 11,
+            "children": [
+              {
+                "id": "111",
+                "title": "Node 112",
+                value: 111,
+                "children": []
+              },
+              {
+                "id": "112",
+                "title": "Node 112",
+                value: 112,
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "12",
+            "title": "Node 12",
+            value: 12,
+            "children": []
+          },
+          {
+            "id": "13",
+            "title": "Node 13",
+            value: 13,
+            "children": []
+          }
+        ]
+      }]
+
+      $('div.treeSelector').treeSelector(rootNode, [11, 12], function(e, values) {
+        console.info('onChange', e, values);
+      })
+    })
+  </script>
+</body>
+</html>
