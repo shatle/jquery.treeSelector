@@ -1,5 +1,11 @@
 ## Simple Tree Selector
 
+item
+- id # for checkbox label element
+- title # view label
+- value # return values
+- children # nodes
+
 #### Example
 
 [https://shatle.github.io/jquery.treeSelector/](https://shatle.github.io/jquery.treeSelector/)

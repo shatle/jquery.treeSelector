@@ -47,7 +47,7 @@
 
       var liTitleSpan = $(document.createElement('span'));
       liTitleSpan.addClass('treeSelector-li-title')
-      liTitleSpan.attr({ 'data-value': node.id })
+      liTitleSpan.attr({ 'data-value': node.value })
       liTitleSpan.text(node.title)
       liTitle.append(liTitleSpan)
 
@@ -135,14 +135,38 @@
         .toArray()
     }
 
+    /**
+     * set checked = false to parents
+     * @param {Element} inputCheckbox 
+     */
+    var uncheckParent = function(inputCheckbox) {
+      var closeUl = $(inputCheckbox).closest('ul')
+      if (closeUl && closeUl.length) {
+        var checkbox = closeUl.prev('.treeSelector-li-title-box').find('input[type=checkbox]:first')
+        checkbox.prop('checked', false)
+        uncheckParent(checkbox.get(0))
+      }
+    }
+
+    /**
+     * events
+     * @param {*} $selector 
+     */
     var bindEvents = function ($selector) {
       $selector.on('change', 'input[type=checkbox]', function (e) {
         if (options.checkWithParent) {
           var childrenBox = $(e.target)
-            .parent('.treeSelector-li-title-box')
-            .next('ul')
-          if (childrenBox && childrenBox.length > 0) {
-            childrenBox.find('input[type=checkbox]').prop('checked', e.target.checked)
+              .parent('.treeSelector-li-title-box')
+              .next('ul')
+          if (e.target.checked) {
+            if (childrenBox && childrenBox.length > 0) {
+              childrenBox.find('input[type=checkbox]').prop('checked', e.target.checked)
+            }
+          } else {
+            uncheckParent(e.target)
+            if (childrenBox && childrenBox.length > 0) {
+              childrenBox.find('input[type=checkbox]').prop('checked', e.target.checked)
+            }
           }
         }
 
