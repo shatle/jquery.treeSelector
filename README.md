@@ -1,10 +1,17 @@
 ## Simple Tree Selector
 
-item
+node
 - id # for checkbox label element
 - title # view label
 - value # return values
 - children # nodes
+
+## Dependencies
+
+- jQuery 1.7+
+- fontawesome 4.7
+
+U can check `index.html`
 
 #### Example
 
