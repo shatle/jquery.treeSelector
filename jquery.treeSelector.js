@@ -18,7 +18,8 @@
       // title with 'title1 - title 2' if true
       titleWithParent: false,
       // when item click, only view leaf title if true
-      notViewClickParentTitle: false
+      notViewClickParentTitle: false,
+      disabled: false
     }, params)
 
     /**
@@ -154,6 +155,9 @@
      */
     var bindEvents = function ($selector) {
       $selector.on('change', 'input[type=checkbox]', function (e) {
+        if (options.disabled) {
+          return false
+        }
         if (options.checkWithParent) {
           var childrenBox = $(e.target)
             .parent('.treeSelector-li-title-box')
@@ -195,6 +199,9 @@
       })
 
       $selector.on('click', 'span.fa.fa-times', function (e) {
+        if (options.disabled) {
+          return false
+        }
         var value = $(e.target).parent('.title-item').attr('data-value')
         // console.info('value', value, $(e.target), $selector.find('input[type=checkbox][data-value=' + value + ']:checked'));
         var input = $selector.find('input[type=checkbox][data-value=' + value + ']:checked')
@@ -211,6 +218,9 @@
       })
 
       $selector.on('click', '.treeSelector-input-box', function (e) {
+        if (options.disabled) {
+          return false
+        }
         // console.info('click', e.target);
         var $wrapper = $selector.find('.treeSelector-wrapper:first')
         var isOpen = $wrapper.hasClass('visible')
@@ -223,6 +233,9 @@
     return $(this).each(function () {
       var selector = $(document.createElement('div'));
       selector.addClass('treeSelector-container');
+      if (options.disabled) {
+        selector.addClass('disabled');
+      }
 
       var selectorInputBox = $(document.createElement('div'));
       selectorInputBox.addClass('treeSelector-input-box');
@@ -240,7 +253,7 @@
       }
 
       selectorWrapper.append(selectorWrapperUl);
-      $(this).append(selector);
+      $(this).empty().append(selector);
 
       // console.info('defaultValues', defaultValues);
       if (defaultValues && defaultValues.length) {
