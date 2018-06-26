@@ -139,7 +139,7 @@
      * set checked = false to parents
      * @param {Element} inputCheckbox 
      */
-    var uncheckParent = function(inputCheckbox) {
+    var uncheckParent = function (inputCheckbox) {
       var closeUl = $(inputCheckbox).closest('ul')
       if (closeUl && closeUl.length) {
         var checkbox = closeUl.prev('.treeSelector-li-title-box').find('input[type=checkbox]:first')
@@ -156,8 +156,8 @@
       $selector.on('change', 'input[type=checkbox]', function (e) {
         if (options.checkWithParent) {
           var childrenBox = $(e.target)
-              .parent('.treeSelector-li-title-box')
-              .next('ul')
+            .parent('.treeSelector-li-title-box')
+            .next('ul')
           if (e.target.checked) {
             if (childrenBox && childrenBox.length > 0) {
               childrenBox.find('input[type=checkbox]').prop('checked', e.target.checked)
@@ -198,9 +198,11 @@
         var value = $(e.target).parent('.title-item').attr('data-value')
         // console.info('value', value, $(e.target), $selector.find('input[type=checkbox][data-value=' + value + ']:checked'));
         var input = $selector.find('input[type=checkbox][data-value=' + value + ']:checked')
-        input.prop('checked', false)
-        if (options.checkWithParent) {
-          uncheckParent(input.get(0))
+        if (input && input.length) {
+          input.prop('checked', false)
+          if (options.checkWithParent) {
+            uncheckParent(input.get(0))
+          }
         }
         var values = getCheckedInputValues($selector)
         appendSelectedItems($selector, values)
