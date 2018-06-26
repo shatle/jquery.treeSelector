@@ -197,7 +197,11 @@
       $selector.on('click', 'span.fa.fa-times', function (e) {
         var value = $(e.target).parent('.title-item').attr('data-value')
         // console.info('value', value, $(e.target), $selector.find('input[type=checkbox][data-value=' + value + ']:checked'));
-        $selector.find('input[type=checkbox][data-value=' + value + ']:checked').prop('checked', false)
+        var input = $selector.find('input[type=checkbox][data-value=' + value + ']:checked')
+        input.prop('checked', false)
+        if (options.checkWithParent) {
+          uncheckParent(input.get(0))
+        }
         var values = getCheckedInputValues($selector)
         appendSelectedItems($selector, values)
         onChange && onChange(e, values)

@@ -83,4 +83,5 @@
   padding-left: 4px;
   background: #fff;
   border: 1px solid #dbe1e2;
+  z-index: 2;
 }
