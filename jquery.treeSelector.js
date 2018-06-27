@@ -155,7 +155,7 @@
      * reset titles when vaule change actions
      * @param {*} $selector 
      */
-    var valueChangeEventView = function($selector) {
+    var valueChangeEventView = function($selector, event) {
       var values = getCheckedInputValues($selector)
         // on view leaf titles
       if (options.notViewClickParentTitle) {
@@ -178,10 +178,10 @@
         }
         // console.info('leafValues', leafValues);
         appendSelectedItems($selector, leafValues)
-        onChange && onChange(e, values)
+        onChange && onChange(event, values)
       } else {
         appendSelectedItems($selector, values)
-        onChange && onChange(e, values)
+        onChange && onChange(event, values)
       }
     }
 
@@ -210,7 +210,7 @@
           }
         }
 
-        valueChangeEventView($selector)
+        valueChangeEventView($selector, e)
       })
 
       $selector.on('click', 'span.fa.fa-times', function (e) {
@@ -227,7 +227,7 @@
           }
         }
 
-        valueChangeEventView($selector)
+        valueChangeEventView($selector, e)
         return false
       })
 
