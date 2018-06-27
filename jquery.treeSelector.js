@@ -62,6 +62,8 @@
         }
         liChildUl.append(childrenLis)
         liBox.append(liChildUl)
+      } else {
+        liBox.addClass('leaf')
       }
 
       li.append(liBox)
@@ -176,15 +178,20 @@
 
         var values = getCheckedInputValues($selector)
         // on view leaf titles
-        if (e.target.checked && options.notViewClickParentTitle) {
+        if (options.notViewClickParentTitle) {
+          // 找到如果子有选中的父亲节点，不显示
           var leafValues = []
-          var clickLi = $(e.target).closest('.treeSelector-li')
-          for (let k = 0; k < values.length; k++) {
-            const value = values[k];
-            var childBox = clickLi.find('label.treeSelector-li-title-box[data-value=' + value + ']')
-            if (childBox) {
-              var hasChildren = childBox.next('ul').length > 0
-              if (!hasChildren) {
+          for (var k = 0; k < values.length; k++) {
+            var value = values[k];
+            var valueLeafInput = $selector.find('.treeSelector-li-box.leaf input[data-value='+value+']')
+            if (valueLeafInput.length > 0) {
+              leafValues.push(value)
+            } else {
+              var liBox = $('label.treeSelector-li-title-box[data-value='+value+']:first')
+              if (liBox.length > 0 && liBox.next('ul').find('input[type=checkbox]:checked').length > 0) {
+                console.info('value 333', value);
+                // 如果子有选中的父亲节点，不显示
+              } else {
                 leafValues.push(value)
               }
             }
