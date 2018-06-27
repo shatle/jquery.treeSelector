@@ -152,6 +152,40 @@
     }
 
     /**
+     * reset titles when vaule change actions
+     * @param {*} $selector 
+     */
+    var valueChangeEventView = function($selector) {
+      var values = getCheckedInputValues($selector)
+        // on view leaf titles
+      if (options.notViewClickParentTitle) {
+        // 找到如果子有选中的父亲节点，不显示
+        var leafValues = []
+        for (var k = 0; k < values.length; k++) {
+          var value = values[k];
+          var valueLeafInput = $selector.find('.treeSelector-li-box.leaf input[data-value='+value+']')
+          if (valueLeafInput.length > 0) {
+            leafValues.push(value)
+          } else {
+            var liBox = $('label.treeSelector-li-title-box[data-value='+value+']:first')
+            if (liBox.length > 0 && liBox.next('ul').find('input[type=checkbox]:checked').length > 0) {
+              console.info('value 333', value);
+              // 如果子有选中的父亲节点，不显示
+            } else {
+              leafValues.push(value)
+            }
+          }
+        }
+        // console.info('leafValues', leafValues);
+        appendSelectedItems($selector, leafValues)
+        onChange && onChange(e, values)
+      } else {
+        appendSelectedItems($selector, values)
+        onChange && onChange(e, values)
+      }
+    }
+
+    /**
      * events
      * @param {*} $selector 
      */
@@ -176,33 +210,7 @@
           }
         }
 
-        var values = getCheckedInputValues($selector)
-        // on view leaf titles
-        if (options.notViewClickParentTitle) {
-          // 找到如果子有选中的父亲节点，不显示
-          var leafValues = []
-          for (var k = 0; k < values.length; k++) {
-            var value = values[k];
-            var valueLeafInput = $selector.find('.treeSelector-li-box.leaf input[data-value='+value+']')
-            if (valueLeafInput.length > 0) {
-              leafValues.push(value)
-            } else {
-              var liBox = $('label.treeSelector-li-title-box[data-value='+value+']:first')
-              if (liBox.length > 0 && liBox.next('ul').find('input[type=checkbox]:checked').length > 0) {
-                console.info('value 333', value);
-                // 如果子有选中的父亲节点，不显示
-              } else {
-                leafValues.push(value)
-              }
-            }
-          }
-          // console.info('leafValues', leafValues);
-          appendSelectedItems($selector, leafValues)
-          onChange && onChange(e, values)
-        } else {
-          appendSelectedItems($selector, values)
-          onChange && onChange(e, values)
-        }
+        valueChangeEventView($selector)
       })
 
       $selector.on('click', 'span.fa.fa-times', function (e) {
@@ -218,9 +226,8 @@
             uncheckParent(input.get(0))
           }
         }
-        var values = getCheckedInputValues($selector)
-        appendSelectedItems($selector, values)
-        onChange && onChange(e, values)
+
+        valueChangeEventView($selector)
         return false
       })
 
