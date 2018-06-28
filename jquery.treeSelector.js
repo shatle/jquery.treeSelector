@@ -19,7 +19,8 @@
       titleWithParent: false,
       // when item click, only view leaf title if true
       notViewClickParentTitle: false,
-      disabled: false
+      disabled: false,
+      emptyOptonPlaceholder: 'no options'
     }, params)
 
     /**
@@ -232,7 +233,7 @@
       })
 
       $selector.on('click', '.treeSelector-input-box', function (e) {
-        if (options.disabled) {
+        if (options.disabled || !tree || !tree.length) {
           return false
         }
         // console.info('click', e.target);
@@ -253,6 +254,7 @@
 
       var selectorInputBox = $(document.createElement('div'));
       selectorInputBox.addClass('treeSelector-input-box');
+      
       var selectorWrapper = $(document.createElement('div'));
       selectorWrapper.addClass('treeSelector-wrapper');
       var selectorWrapperUl = $(document.createElement('ul'))
@@ -264,6 +266,9 @@
           var element = buildTree(tree[j], 0)
           selectorWrapperUl.append(element)
         }
+      } else {
+        selector.addClass('no-options')
+        selectorInputBox.text(options.emptyOptonPlaceholder)
       }
 
       selectorWrapper.append(selectorWrapperUl);

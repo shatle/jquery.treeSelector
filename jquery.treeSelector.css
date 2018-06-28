@@ -103,3 +103,9 @@
 .treeSelector-container.disabled .title-item .fa-times {
   display: none;
 }
+
+.treeSelector-container.no-options .treeSelector-input-box {
+  padding-top: 5px;
+  color: #999;
+  user-select: none;
+}
