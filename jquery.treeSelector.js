@@ -86,7 +86,7 @@
         var tmpTitles = getParentTitles($seletor, closeValue).slice()
         titles = tmpTitles.concat([closeTitle])
       }
-      return titles.filter(e => e)
+      return titles.filter(function(e) {return e})
     }
 
     /**
@@ -113,7 +113,7 @@
             var title = item.text()
             if (options.titleWithParent) {
               var itemParentTitles = getParentTitles($selector, value)
-              title = itemParentTitles.concat([title]).filter(e => e).join(' - ')
+              title = itemParentTitles.concat([title]).filter(function(e) {return e}).join(' - ')
             }
             itemSpan.text(title)
             var faClose = $(document.createElement('span'));
