@@ -15,7 +15,7 @@
     var options = $.extend({
       // children checked/unchecked if true
       checkWithParent: false,
-      // title with 'title1 - title 2' if true
+      // title with 'title1 - title 2' in view if true
       titleWithParent: false,
       // when item click, only view leaf title if true
       notViewClickParentTitle: false,
@@ -160,7 +160,6 @@
       var values = getCheckedInputValues($selector)
         // on view leaf titles
       if (options.notViewClickParentTitle) {
-        // 找到如果子有选中的父亲节点，不显示
         var leafValues = []
         for (var k = 0; k < values.length; k++) {
           var value = values[k];
@@ -170,8 +169,7 @@
           } else {
             var liBox = $('label.treeSelector-li-title-box[data-value='+value+']:first')
             if (liBox.length > 0 && liBox.next('ul').find('input[type=checkbox]:checked').length > 0) {
-              console.info('value 333', value);
-              // 如果子有选中的父亲节点，不显示
+              // dont show
             } else {
               leafValues.push(value)
             }
@@ -214,6 +212,9 @@
         valueChangeEventView($selector, e)
       })
 
+      /**
+       * click [x] icon
+       */
       $selector.on('click', 'span.fa.fa-times', function (e) {
         if (options.disabled) {
           return false
@@ -232,6 +233,9 @@
         return false
       })
 
+      /**
+       * click input, show options
+       */
       $selector.on('click', '.treeSelector-input-box', function (e) {
         if (options.disabled || !tree || !tree.length) {
           return false
@@ -245,6 +249,7 @@
       })
     }
 
+    // construct 
     return $(this).each(function () {
       var selector = $(document.createElement('div'));
       selector.addClass('treeSelector-container');
