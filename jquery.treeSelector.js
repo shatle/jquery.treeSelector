@@ -3,10 +3,16 @@
     // autoclose
     if (!window.treeSelector_autoclose_FN) {
       $(window).on('click', function (e) {
-        // console.info('window', e.target, $(e.target).closest('.treeSelector-container'));
         var isClickSelector = $(e.target).closest('.treeSelector-container').length > 0
         if (!isClickSelector) {
           $('div.treeSelector-wrapper').removeClass('visible')
+        } else {
+          // First selector should be close when the second onClick
+          var $container = $(e.target).closest('.treeSelector-container')
+          if ($container.length > 0) {
+            var treeId = $container.attr('data-treeId')
+            $('div.treeSelector-container:not([data-treeId=' + treeId + '])').find('div.treeSelector-wrapper').removeClass('visible')
+          }
         }
       })
     }
@@ -45,12 +51,18 @@
         'data-title': node.title
       })
       var liTitleCheckbox = $(document.createElement('input'));
-      liTitleCheckbox.attr({ type: 'checkbox', id: nodeLiId, 'data-value': node.value })
+      liTitleCheckbox.attr({
+        type: 'checkbox',
+        id: nodeLiId,
+        'data-value': node.value
+      })
       liTitle.append(liTitleCheckbox)
 
       var liTitleSpan = $(document.createElement('span'));
       liTitleSpan.addClass('treeSelector-li-title')
-      liTitleSpan.attr({ 'data-value': node.value })
+      liTitleSpan.attr({
+        'data-value': node.value
+      })
       liTitleSpan.text(node.title)
       liTitle.append(liTitleSpan)
 
@@ -87,7 +99,9 @@
         var tmpTitles = getParentTitles($seletor, closeValue).slice()
         titles = tmpTitles.concat([closeTitle])
       }
-      return titles.filter(function(e) {return e})
+      return titles.filter(function (e) {
+        return e
+      })
     }
 
     /**
@@ -108,13 +122,17 @@
             // titles.push([item.text(), value])
             var titleItem = $(document.createElement('div'));
             titleItem.addClass('title-item')
-            titleItem.attr({ 'data-value': value })
+            titleItem.attr({
+              'data-value': value
+            })
             var itemSpan = $(document.createElement('span'));
             itemSpan.addClass('title')
             var title = item.text()
             if (options.titleWithParent) {
               var itemParentTitles = getParentTitles($selector, value)
-              title = itemParentTitles.concat([title]).filter(function(e) {return e}).join(' - ')
+              title = itemParentTitles.concat([title]).filter(function (e) {
+                return e
+              }).join(' - ')
             }
             itemSpan.text(title)
             var faClose = $(document.createElement('span'));
@@ -136,7 +154,9 @@
      */
     var getCheckedInputValues = function ($selector) {
       return $selector.find('input[type=checkbox]:checked')
-        .map(function (_index, elem) { return $(elem).attr('data-value') })
+        .map(function (_index, elem) {
+          return $(elem).attr('data-value')
+        })
         .toArray()
     }
 
@@ -157,18 +177,18 @@
      * reset titles when vaule change actions
      * @param {*} $selector 
      */
-    var valueChangeEventView = function($selector, event) {
+    var valueChangeEventView = function ($selector, event) {
       var values = getCheckedInputValues($selector)
-        // on view leaf titles
+      // on view leaf titles
       if (options.notViewClickParentTitle) {
         var leafValues = []
         for (var k = 0; k < values.length; k++) {
           var value = values[k];
-          var valueLeafInput = $selector.find('.treeSelector-li-box.leaf input[data-value='+value+']')
+          var valueLeafInput = $selector.find('.treeSelector-li-box.leaf input[data-value=' + value + ']')
           if (valueLeafInput.length > 0) {
             leafValues.push(value)
           } else {
-            var liBox = $('label.treeSelector-li-title-box[data-value='+value+']:first')
+            var liBox = $('label.treeSelector-li-title-box[data-value=' + value + ']:first')
             if (liBox.length > 0 && liBox.next('ul').find('input[type=checkbox]:checked').length > 0) {
               // dont show
             } else {
@@ -250,22 +270,23 @@
       })
     }
 
-    var genRandId = function() {
+    var genRandId = function () {
       return (new Date()).valueOf() + parseInt(Math.random() * 10000000000, 10)
     }
- 
+
     // construct 
     return $(this).each(function () {
       var selector = $(document.createElement('div'));
       var randId = genRandId()
       selector.addClass('treeSelector-container');
+      selector.attr('data-treeId', randId)
       if (options.disabled) {
         selector.addClass('disabled');
       }
 
       var selectorInputBox = $(document.createElement('div'));
       selectorInputBox.addClass('treeSelector-input-box');
-      
+
       var selectorWrapper = $(document.createElement('div'));
       selectorWrapper.addClass('treeSelector-wrapper');
       var selectorWrapperUl = $(document.createElement('ul'))
