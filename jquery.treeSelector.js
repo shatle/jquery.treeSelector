@@ -28,7 +28,7 @@
      * @param {*} node 
      * @param {*} level 
      */
-    var buildTree = function (node, level) {
+    var buildTree = function (node, level, randId) {
       var hasChildren = node.children && node.children.length > 0
 
       var li = $(document.createElement('li'));
@@ -38,13 +38,14 @@
 
       var liTitle = $(document.createElement('label'));
       liTitle.addClass('treeSelector-li-title-box')
+      var nodeLiId = 'treeSelector-li-' + randId + '-' + node.id
       liTitle.attr({
-        for: 'treeSelector-li-' + node.id,
+        for: nodeLiId,
         'data-value': node.value,
         'data-title': node.title
       })
       var liTitleCheckbox = $(document.createElement('input'));
-      liTitleCheckbox.attr({ type: 'checkbox', id: 'treeSelector-li-' + node.id, 'data-value': node.value })
+      liTitleCheckbox.attr({ type: 'checkbox', id: nodeLiId, 'data-value': node.value })
       liTitle.append(liTitleCheckbox)
 
       var liTitleSpan = $(document.createElement('span'));
@@ -59,7 +60,7 @@
         var liChildUl = $(document.createElement('ul'));
         var childrenLis = $()
         for (var k = 0; k < node.children.length; k++) {
-          childrenLis = childrenLis.add(buildTree(node.children[k], level + 1))
+          childrenLis = childrenLis.add(buildTree(node.children[k], level + 1, randId))
         }
         liChildUl.append(childrenLis)
         liBox.append(liChildUl)
@@ -249,9 +250,14 @@
       })
     }
 
+    var genRandId = function() {
+      return (new Date()).valueOf() + parseInt(Math.random() * 10000000000, 10)
+    }
+ 
     // construct 
     return $(this).each(function () {
       var selector = $(document.createElement('div'));
+      var randId = genRandId()
       selector.addClass('treeSelector-container');
       if (options.disabled) {
         selector.addClass('disabled');
@@ -268,7 +274,7 @@
       selector.append(selectorWrapper)
       if (tree && tree.length) {
         for (var j = 0; j < tree.length; j++) {
-          var element = buildTree(tree[j], 0)
+          var element = buildTree(tree[j], 0, randId)
           selectorWrapperUl.append(element)
         }
       } else {

@@ -24,13 +24,20 @@
     }
 
     .container {
-      height: 100vh;
+      /* height: 100vh; */
       width: 100%;
     }
   </style>
 
+  <h3>The first one: </h3>
+
   <div class="container">
     <div class="treeSelector"></div>
+  </div>
+
+  <h3>The second one: </h3>
+  <div class="container">
+    <div class="treeSelector2"></div>
   </div>
 
 
@@ -48,7 +55,7 @@
             "children": [
               {
                 "id": "111",
-                "title": "Node 112",
+                "title": "Node 111",
                 value: 111,
                 "children": []
               },
@@ -84,6 +91,14 @@
 
       $('div.treeSelector').treeSelector(rootNode, [11, 12], function (e, values) {
         console.info('onChange', e, values);
+      }, { 
+        checkWithParent: true, 
+        titleWithParent: true,
+        notViewClickParentTitle: true
+      })
+
+      $('div.treeSelector2').treeSelector(rootNode, [11, 12], function (e, values) {
+        console.info('onChange 2', e, values);
       }, { 
         checkWithParent: true, 
         titleWithParent: true,
