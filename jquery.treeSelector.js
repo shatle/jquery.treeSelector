@@ -1,21 +1,19 @@
 (function ($) {
   jQuery.fn.treeSelector = function (tree, defaultValues, onChange, params) {
-    // autoclose
-    if (!window.treeSelector_autoclose_FN) {
-      $(window).on('click', function (e) {
-        var isClickSelector = $(e.target).closest('.treeSelector-container').length > 0
-        if (!isClickSelector) {
-          $('div.treeSelector-wrapper').removeClass('visible')
-        } else {
-          // First selector should be close when the second onClick
-          var $container = $(e.target).closest('.treeSelector-container')
-          if ($container.length > 0) {
-            var treeId = $container.attr('data-treeId')
-            $('div.treeSelector-container:not([data-treeId=' + treeId + '])').find('div.treeSelector-wrapper').removeClass('visible')
-          }
+    // use namespace for autoclose
+    $(window).off('click.treeSelector').on('click.treeSelector', function (e) {
+      var isClickSelector = $(e.target).closest('.treeSelector-container').length > 0
+      if (!isClickSelector) {
+        $('div.treeSelector-wrapper').removeClass('visible')
+      } else {
+        // First selector should be close when the second onClick
+        var $container = $(e.target).closest('.treeSelector-container')
+        if ($container.length > 0) {
+          var treeId = $container.attr('data-treeId')
+          $('div.treeSelector-container:not([data-treeId=' + treeId + '])').find('div.treeSelector-wrapper').removeClass('visible')
         }
-      })
-    }
+      }
+    })
 
     // options
     var options = $.extend({
