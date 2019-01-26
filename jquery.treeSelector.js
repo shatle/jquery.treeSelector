@@ -31,6 +31,7 @@
      * iterate to gen node
      * @param {*} node 
      * @param {*} level 
+     * @param Int randId. The selector private id
      */
     var buildTree = function (node, level, randId) {
       var hasChildren = node.children && node.children.length > 0
@@ -108,9 +109,7 @@
      * @param {*} values 
      */
     var appendSelectedItems = function ($selector, values) {
-      // console.info('appendSelectedItems', Array.isArray(values), typeof(values));
       if ($selector && values && Array.isArray(values)) {
-        var titles = []
         var titleSpans = $()
         for (var k = 0; k < values.length; k++) {
           var value = values[k];
@@ -141,8 +140,9 @@
             titleSpans = titleSpans.add(titleItem)
           }
         }
-        // console.info('titles', titles, titleSpans);
-        $selector.find('.treeSelector-input-box:first').empty().append(titleSpans)
+        $selector.find('.treeSelector-input-box:first')
+          .empty()
+          .append(titleSpans)
       }
     }
 
@@ -165,7 +165,8 @@
     var uncheckParent = function (inputCheckbox) {
       var closeUl = $(inputCheckbox).closest('ul')
       if (closeUl && closeUl.length) {
-        var checkbox = closeUl.prev('.treeSelector-li-title-box').find('input[type=checkbox]:first')
+        var checkbox = closeUl.prev('.treeSelector-li-title-box')
+          .find('input[type=checkbox]:first')
         checkbox.prop('checked', false)
         uncheckParent(checkbox.get(0))
       }
@@ -182,7 +183,8 @@
         var leafValues = []
         for (var k = 0; k < values.length; k++) {
           var value = values[k];
-          var valueLeafInput = $selector.find('.treeSelector-li-box.leaf input[data-value=' + value + ']')
+          var valueLeafInput = $selector
+            .find('.treeSelector-li-box.leaf input[data-value=' + value + ']')
           if (valueLeafInput.length > 0) {
             leafValues.push(value)
           } else {
@@ -194,7 +196,6 @@
             }
           }
         }
-        // console.info('leafValues', leafValues);
         appendSelectedItems($selector, leafValues)
         onChange && onChange(event, values)
       } else {
@@ -218,12 +219,14 @@
             .next('ul')
           if (e.target.checked) {
             if (childrenBox && childrenBox.length > 0) {
-              childrenBox.find('input[type=checkbox]').prop('checked', e.target.checked)
+              childrenBox.find('input[type=checkbox]')
+                .prop('checked', e.target.checked)
             }
           } else {
             uncheckParent(e.target)
             if (childrenBox && childrenBox.length > 0) {
-              childrenBox.find('input[type=checkbox]').prop('checked', e.target.checked)
+              childrenBox.find('input[type=checkbox]')
+                .prop('checked', e.target.checked)
             }
           }
         }
@@ -239,7 +242,6 @@
           return false
         }
         var value = $(e.target).parent('.title-item').attr('data-value')
-        // console.info('value', value, $(e.target), $selector.find('input[type=checkbox][data-value=' + value + ']:checked'));
         var input = $selector.find('input[type=checkbox][data-value=' + value + ']:checked')
         if (input && input.length) {
           input.prop('checked', false)
@@ -259,7 +261,6 @@
         if (options.disabled || !tree || !tree.length) {
           return false
         }
-        // console.info('click', e.target);
         var $wrapper = $selector.find('.treeSelector-wrapper:first')
         var isOpen = $wrapper.hasClass('visible')
         if (!isOpen) {
@@ -304,9 +305,7 @@
       selectorWrapper.append(selectorWrapperUl);
       $(this).empty().append(selector);
 
-      // console.info('defaultValues', defaultValues);
       if (defaultValues && defaultValues.length) {
-        console.info('defaultValues22', defaultValues);
         appendSelectedItems(selector, defaultValues)
       }
 
