@@ -46,7 +46,8 @@ var rootNode = [{
       "id": "12",
       "title": "Node 12",
       "value": 12,
-      "children": []
+      "children": [],
+      "disabled":true
     },
     {
       "id": "13",
@@ -76,7 +77,22 @@ var options = $.extend({
   // title with 'title1 - title 2' if true
   titleWithParent: false,
   // when item click, only view leaf title if true
-  notViewClickParentTitle: false
+  notViewClickParentTitle: false,
+  // disabled a node
+  disabled: function(node){
+    return true/false
+  },
+  //
+  emptyOptonPlaceholder: 'no options',
+  // only get leafs value
+  onlyLeaf: false,
+  // custom node's props
+  props: {
+    label: 'title',
+    value: 'value'
+  },
+  // every level indent
+  indent: 10
 }, params)
 
 ```
