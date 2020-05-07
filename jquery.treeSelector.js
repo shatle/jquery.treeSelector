@@ -24,7 +24,13 @@
       // when item click, only view leaf title if true
       notViewClickParentTitle: false,
       disabled: false,
-      emptyOptonPlaceholder: 'no options'
+      emptyOptonPlaceholder: 'no options',
+      onlyLeaf: false,
+      props: {
+        label: 'title',
+        value: 'value'
+      },
+      indent: 10
     }, params)
 
     /**
@@ -35,7 +41,7 @@
      */
     var buildTree = function (node, level, randId) {
       var hasChildren = node.children && node.children.length > 0
-
+      var nodeProps = options.props
       var li = $(document.createElement('li'));
       li.addClass('treeSelector-li level-' + level + (hasChildren ? ' has-children' : ''))
       var liBox = $(document.createElement('div'));
@@ -43,32 +49,54 @@
 
       var liTitle = $(document.createElement('label'));
       liTitle.addClass('treeSelector-li-title-box')
-      var nodeLiId = 'treeSelector-li-' + randId + '-' + node.id
+      liTitle.css('padding-left', level * options.indent)
+      var nodeLiId = 'treeSelector-li-' + randId + '-' + node[nodeProps.value]
       liTitle.attr({
-        for: nodeLiId,
-        'data-value': node.value,
-        'data-title': node.title
+        // 'for': nodeLiId,
+        'data-value': node[nodeProps.value],
+        'data-title': node[nodeProps.label],
+        'title': node[nodeProps.label]
       })
+      var liTitlePlus = $(document.createElement('i'));
+      liTitlePlus.addClass('fa fa-plus-square-o');
+      liTitle.append(liTitlePlus)
       var liTitleCheckbox = $(document.createElement('input'));
+      var disabled = false;
+      if (options.disabled && typeof options.disabled === 'function') {
+        disabled = options.disabled(node)
+      }
+      if (node.disabled == undefined) {
+        disabled = false;
+      } else {
+        disabled = node.disabled
+      }
+      if (node.checked == undefined) {
+        checked = false
+      } else {
+        checked = node.checked
+      }
       liTitleCheckbox.attr({
         type: 'checkbox',
         id: nodeLiId,
-        'data-value': node.value
+        'data-value': node[nodeProps.value],
+        disabled: disabled,
+        checked: checked
       })
       liTitle.append(liTitleCheckbox)
 
       var liTitleSpan = $(document.createElement('span'));
       liTitleSpan.addClass('treeSelector-li-title')
       liTitleSpan.attr({
-        'data-value': node.value
+        'data-value': node[nodeProps.value]
       })
-      liTitleSpan.text(node.title)
+      liTitleSpan.text(node[nodeProps.label])
       liTitle.append(liTitleSpan)
 
       liBox.append(liTitle)
 
       if (hasChildren) {
         var liChildUl = $(document.createElement('ul'));
+        liChildUl.css('display', 'none')
         var childrenLis = $()
         for (var k = 0; k < node.children.length; k++) {
           childrenLis = childrenLis.add(buildTree(node.children[k], level + 1, randId))
@@ -77,6 +105,8 @@
         liBox.append(liChildUl)
       } else {
         liBox.addClass('leaf')
+        liTitlePlus.remove();
+        liTitle.css('padding-left', (level + 2) * options.indent - 5)
       }
 
       li.append(liBox)
@@ -109,7 +139,7 @@
      * @param {*} values 
      */
     var appendSelectedItems = function ($selector, values) {
-      if ($selector && values && Array.isArray(values)) {
+      if ($selector && values && Object.prototype.toString.call(values) === '[object Array]') {
         var titleSpans = $()
         for (var k = 0; k < values.length; k++) {
           var value = values[k];
@@ -135,8 +165,8 @@
             var faClose = $(document.createElement('span'));
             faClose.addClass('fa fa-times')
 
-            titleItem.append(faClose)
             titleItem.append(itemSpan)
+            titleItem.append(faClose)
             titleSpans = titleSpans.add(titleItem)
           }
         }
@@ -151,11 +181,23 @@
      * @param {*} $selector 
      */
     var getCheckedInputValues = function ($selector) {
-      return $selector.find('input[type=checkbox]:checked')
-        .map(function (_index, elem) {
-          return $(elem).attr('data-value')
-        })
-        .toArray()
+      var onlyLeaf = options.onlyLeaf
+      if (onlyLeaf) {
+        return $selector.find('input[type=checkbox]:checked')
+          .map(function (_index, elem) {
+            return $(elem).parent().parent().hasClass('leaf') ? $(elem).attr('data-value') : null
+          })
+          .filter(function (_index, elem) {
+            return elem !== null
+          })
+          .toArray()
+      } else {
+        return $selector.find('input[type=checkbox]:checked')
+          .map(function (_index, elem) {
+            return $(elem).attr('data-value')
+          })
+          .toArray()
+      }
     }
 
     /**
@@ -258,7 +300,7 @@
        * click input, show options
        */
       $selector.on('click', '.treeSelector-input-box', function (e) {
-        if (options.disabled || !tree || !tree.length) {
+        if (options.disabled || !tree) {
           return false
         }
         var $wrapper = $selector.find('.treeSelector-wrapper:first')
@@ -266,6 +308,21 @@
         if (!isOpen) {
           $wrapper.addClass('visible')
         }
+      })
+
+      $selector.on('click', '.treeSelector-li-title-box>i', function (e) {
+        var el = $(e.target);
+        if (el.hasClass('fa-plus-square-o')) {
+          el.addClass('fa-minus-square-o')
+          el.removeClass('fa-plus-square-o')
+          el.parent().next('ul').css('display', 'block')
+        } else {
+          el.addClass('fa-plus-square-o')
+          el.removeClass('fa-minus-square-o')
+          el.parent().next('ul').css('display', 'none')
+        }
+        console.log(e);
+        return false;
       })
     }
 
@@ -292,20 +349,25 @@
 
       selector.append(selectorInputBox)
       selector.append(selectorWrapper)
-      if (tree && tree.length) {
+      if (tree && tree.length > 0) {
         for (var j = 0; j < tree.length; j++) {
           var element = buildTree(tree[j], 0, randId)
           selectorWrapperUl.append(element)
         }
       } else {
         selector.addClass('no-options')
-        selectorInputBox.text(options.emptyOptonPlaceholder)
+        // selectorInputBox.text(options.emptyOptonPlaceholder)
+        var liOption = $(document.createElement('li'))
+        liOption.text(options.emptyOptonPlaceholder)
+        liOption.css('text-align', 'center')
+        selectorWrapperUl.append(liOption)
       }
 
       selectorWrapper.append(selectorWrapperUl);
       $(this).empty().append(selector);
 
-      if (defaultValues && defaultValues.length) {
+
+      if (tree && tree.length > 0 && defaultValues && defaultValues.length > 0) {
         appendSelectedItems(selector, defaultValues)
       }
 
